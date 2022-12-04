@@ -1,0 +1,174 @@
+#include<stdio.h>
+#include<string.h>
+#include<limits.h>
+#include<stdlib.h>
+#include<ctype.h>
+
+struct stack{
+  char ele;
+  struct stack *next;
+};
+int stack1[20],top1=-1;
+void push(char);
+char pop();
+int precedence(char);
+int evaluate(char[]);
+void push1(int);
+int pop1();
+
+
+
+struct stack *top = NULL;
+
+int main(){
+   char infix[20], postfix[20];
+   int i = 0, j= 0;
+
+printf("\nENTER INFIX EXPRESSION: ");
+scanf("%s", infix);
+
+while(infix[i] != '\0'){
+   if(isalnum(infix[i]))
+   {
+      postfix[j] = infix[i];
+      j++;
+   }
+   else
+   {
+      if(top == NULL)
+      push(infix[i]);
+      else{
+          while(top != NULL && (precedence(top->ele) >= precedence(infix[i])));
+         {
+             postfix[j] = pop();
+             j++;
+
+         }
+      push(infix[i]);
+   }
+}
+++i;
+}
+while(top != NULL){
+   postfix[j] = pop();
+j++;}
+postfix[j] = '\0';
+printf("%s", postfix);
+evaluate(postfix);
+return 0;
+}
+
+
+int precedence(char x){
+  switch(x)
+{
+case '^': return 4;
+case '*':
+case '/': return 3;
+case '+':
+case '-': return 2;
+
+default: return 0;
+}
+}
+
+void push (char x){
+   int item;
+   struct stack *temp;
+temp = (struct stack *)malloc(sizeof(struct stack));
+temp->ele = x;
+temp->next=NULL;
+
+if(top == NULL){
+ top = temp;
+}
+else
+{
+    temp->next=top;
+    top=temp;
+}
+}
+
+char pop(){
+struct stack *tmp;
+char item;
+
+if(top == NULL)
+  printf("EMPTY STACK");
+
+else if(top->next == NULL)
+{
+tmp = top;
+item = top->ele;
+top= NULL;
+free(tmp);
+}
+else{
+tmp = top;
+item = top->ele;
+top= top->next;
+free(tmp);
+}
+return item;
+}
+
+//evaluate EXPRESSION
+
+int evaluate(char exp[20])
+{
+
+    char *e;
+    int n1,n2,n3,num;
+
+
+    e = exp;
+    while(*e != '\0')
+    {
+        if(isdigit(*e))
+        {
+            num = *e - 48;
+            push1(num);
+        }
+        else
+        {
+            n1 = pop1();
+            n2 = pop1();
+            switch(*e)
+            {
+            case '+':
+            {
+                n3 = n1 + n2;
+                break;
+            }
+            case '-':
+            {
+                n3 = n2 - n1;
+                break;
+            }
+            case '*':
+            {
+                n3 = n1 * n2;
+                break;
+            }
+            case '/':
+            {
+                n3 = n2 / n1;
+                break;
+            }
+            }
+            push1(n3);
+        }
+        e++;
+    }
+    printf("\nThe result of expression %s  =  %d\n\n",exp,pop1());
+    return 0;
+}
+void push1(int x)
+{
+    stack1[++top1] = x;
+}
+
+int pop1()
+{
+    return stack1[top1--];
+}
