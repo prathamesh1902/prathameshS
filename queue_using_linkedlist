@@ -1,0 +1,104 @@
+#include<stdio.h>   
+#include<stdlib.h>  
+struct abc   
+{  
+    int data;   
+    struct abc *next;  
+}; 
+struct abc *front; 
+struct abc *rear;
+void insert();
+int delete();
+void display();
+
+void main()
+{
+    int choice,d,ch;
+    do{
+    printf("\n1.insert 2.delete 3.display 4.exit\n");
+    scanf("%d",&choice);
+        switch(choice)
+        {
+            case 1:
+            insert();
+            break;
+            case 2:
+            d=delete();
+            printf("element deleted is %d",d);
+            break;
+            case 3:
+            display();
+            break;
+            case 4:
+            break;
+        }
+        printf("do you want to continue");
+         scanf("%d",&ch);
+    }while(ch==1);
+}
+void insert()
+{
+    struct abc *new;
+    int data;
+    new=(struct abc*)malloc(sizeof(struct abc));
+    if(new==NULL)
+    {
+    printf("overflow");
+    return;
+    }
+    else
+    {
+        printf("enter data");
+        scanf("%d",&data);
+        new->data=data;
+        new->next=NULL;
+        if(front==NULL)
+        {
+            front=new;
+            rear=new;
+            
+        }
+        else
+        {
+            rear->next=new;
+            rear=new;
+        }
+    }
+}
+int delete()
+{
+    int d;
+    struct abc *temp;
+    if(front==NULL)
+    {
+        printf("underflow");
+        return;
+    }
+    else
+    {
+        temp=front;
+        front=front->next;
+        d=temp->data;
+        free(temp);
+        return d;
+    }
+}
+void display()
+{
+    struct abc *temp;
+    temp=front;
+    if(front==NULL)
+    {
+        printf("empty");
+        return;
+    }
+    else 
+    {
+        while(temp!=NULL)
+        {
+            printf("%d",temp->data);
+            temp=temp->next;
+        }
+        
+    }
+}
