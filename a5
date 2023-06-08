@@ -1,0 +1,46 @@
+/*
+Runtime polymorphism
+function overloading
+dynamic binding
+*/
+
+
+import java.util.Scanner;
+abstract class Shape{
+    double a,b;
+    abstract public void compute_area(double a, double b);        //have to declare function only
+}
+class Triangle extends Shape{
+    public void compute_area(double a,double b)   //as class is abstract so wherever necessary there will be definition of function
+    {
+        System.out.println("Area of triangle is : "+ 0.5*a*b);
+    }
+}
+class Rectangle extends Shape{
+    public void compute_area(double a,double b)
+    {
+        System.out.println("Area of rectangle is : "+ a*b);
+    }
+}
+class Area
+{
+    public static void main(String args[])
+    {
+        Scanner input = new Scanner(System.in);
+        double length,breadth,height,base;
+        Shape shape;           //abstract class:   className objectName  (to declare abstract class)
+        Triangle triangle = new Triangle();
+        Rectangle rectangle = new Rectangle();
+        System.out.println("Enter length and breadh of rectangle:");
+        length = input.nextDouble();
+        breadth = input.nextDouble();
+        shape = rectangle;   //object of shape class has assigned value of rectangle class
+        shape.compute_area(length,breadth);  //function call using parent class object (run time it will decide which object to choose)
+        
+        System.out.println("Enter base and height of triangle:");
+        base = input.nextDouble();
+        height = input.nextDouble();
+        shape = triangle;     ////object of shape class has assigned value of triangle class
+        shape.compute_area(base,height);
+    }
+}
