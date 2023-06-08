@@ -1,0 +1,207 @@
+package abc;
+
+import java.util.*;
+
+public class Complex {
+
+public static void main(String[] args) {
+
+int choice=0;
+
+float num1,num2;
+
+Complex_op cal = new Complex_op();
+
+Scanner input = new Scanner(System.in);
+
+do
+
+{
+
+System.out.println("-----------WELCOME TO MAINMENU-------------");
+
+System.out.println("1.Addition \n2.Substraction \n3.Multiplication \n4.Division");
+
+choice = input.nextInt();
+
+switch(choice) {
+
+case 1 : System.out.println("Enter the First number");
+
+num1=input.nextFloat();
+
+num2=input.nextFloat();
+
+Complex_op Object1 = new Complex_op(num1,num2);
+
+System.out.println("Enter the Second number");
+
+num1=input.nextInt();
+
+num2=input.nextInt();
+
+Complex_op Object2 = new Complex_op(num1,num2);
+
+cal.Addition(Object1,Object2);
+
+break;
+
+case 2 : System.out.println("Enter the First number");
+
+num1=input.nextFloat();
+
+num2=input.nextFloat();
+
+Complex_op Object3 = new Complex_op(num1,num2);
+
+System.out.println("Enter the Second number");
+
+num1=input.nextInt();
+
+num2=input.nextInt();
+
+Complex_op Object4 = new Complex_op(num1,num2);
+
+cal.Subtraction(Object3,Object4);
+
+break;
+
+case 3 : System.out.println("Enter the First number");
+
+num1=input.nextFloat();
+
+num2=input.nextFloat();
+
+Complex_op Object5 = new Complex_op(num1,num2);
+
+System.out.println("Enter the Second number");
+
+num1=input.nextInt();
+
+num2=input.nextInt();
+
+Complex_op Object6 = new Complex_op(num1,num2);
+
+cal.Multiplication(Object5,Object6);
+
+break;
+
+case 4 : System.out.println("Enter the First number");
+
+num1=input.nextFloat();
+
+num2=input.nextFloat();
+
+Complex_op Object8 = new Complex_op(num1,num2);
+
+System.out.println("Enter the Second number");
+
+num1=input.nextInt();
+
+num2=input.nextInt();
+
+Complex_op Object9 = new Complex_op(num1,num2);
+
+cal.Division(Object8,Object9);
+
+break;
+
+}
+
+}while(choice!=5);
+
+input.close();
+
+}
+
+}
+
+class Complex_op
+
+{
+
+float real,imag;
+
+Complex_op()
+
+{
+
+real=0;
+
+imag=0;
+
+}
+
+Complex_op(float Comp1,float Comp2)
+
+{
+
+real=Comp1;
+
+imag=Comp2;
+
+}
+
+public
+
+void Addition(Complex_op C1,Complex_op C2)
+
+{
+
+float real,imag;
+
+real=(C1.real+ C2.real);
+
+imag=(C1.imag+ C2.imag);
+
+System.out.println("Addition :("+real+") + ("+imag+")i");
+
+}
+
+public
+
+void Subtraction(Complex_op C1,Complex_op C2) {
+
+float real,imag;
+
+real=(C1.real - C2.real);
+
+imag=(C1.imag - C2.imag);
+
+System.out.println("Subtraction :("+real+") + ("+imag+")i");
+
+}
+
+public
+
+void Multiplication(Complex_op C1,Complex_op C2)
+
+{
+
+float real,imag;
+
+real=(C1.real*C2.real - C1.imag*C2.imag);
+
+imag=(C1.real*C2.imag + C2.real*C1.imag);
+
+System.out.println("Multiplication :("+real+") + ("+imag+")i");
+
+}
+
+public
+
+void Division(Complex_op C1,Complex_op C2)
+
+{
+
+float real,imag;
+
+real = (C1.real*C2.real + C1.imag*C2.imag)/((C2.real*C2.real) + (C2.imag*C2.imag));
+
+imag = (C1.imag*C2.real - C1.real*C2.imag)/((C2.real*C2.real) + (C2.imag*C2.imag));
+
+System.out.println("Division :("+real+") + ("+imag+")i");
+
+}
+
+}
