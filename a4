@@ -1,0 +1,273 @@
+package abc;
+
+import java.util.Scanner;
+
+public class Data {
+
+public static void main(String[] args) {
+
+Scanner input =new Scanner(System.in);
+
+int choice;
+
+do {
+
+System.out.println("\nThe Role of Employee is :- ");
+
+employee m=new employee();
+
+Programmer n= new Programmer();
+
+Teamlead s= new Teamlead();
+
+AssistantProjectManager a=new AssistantProjectManager();
+
+System.out.println("\n1.Programmer\n2.TeamLead\n3.Assisant project Manager\n4.project Manager\n5.Exit\n");
+
+choice =input.nextInt();
+
+switch(choice) {
+
+case 1 :
+
+m.getdata();
+
+n.calculate();
+
+m.display();
+
+n.display1();
+
+break;
+
+case 2 : m.getdata();
+
+s.calculate();
+
+m.display();
+
+s.display1();
+
+break;
+
+case 3 : m.getdata();
+
+a.calculate();
+
+m.display();
+
+a.display1();
+
+break;
+
+case 4 : m.getdata();
+
+m.display();
+
+break;
+
+}
+
+}while(choice!=5);
+
+input.close();
+
+}
+
+}
+
+class employee{
+
+int id;
+
+long mobile;
+
+String name ,address,mail;
+
+employee(){
+
+id =0;
+
+mobile=0;
+
+name ="";
+
+address ="";
+
+mail="";
+
+}
+
+void getdata(){
+
+Scanner input =new Scanner(System.in);
+
+System.out.println("\nEnter Information of Employee is :-");
+
+System.out.println("\nEnter the name :-");
+
+name=input.nextLine();
+
+System.out.println("\nEnter the address :- ");
+
+address= input.nextLine();
+
+System.out.println("\nEnter the mail :- ");
+
+mail=input.nextLine();
+
+System.out.println("\nEnter the Mobile No :- ");
+
+mobile=input.nextLong();
+
+System.out.println("\nEnter the id : - ");
+
+id=input.nextInt();
+
+input.close();
+
+}
+
+void display() {
+
+System.out.println("\nThe Information of Employee is :-");
+
+System.out.println("The Name is :- "+name);
+
+System.out.println("The mail is :- "+mail);
+
+System.out.println("The Address is :- "+address);
+
+System.out.println("The mobile no is :- "+mobile);
+
+System.out.println("The id is :- "+id);
+
+}
+
+}
+
+class Programmer extends employee{
+
+Scanner input =new Scanner(System.in);
+
+double da,hra,pf,basic,club,grros;
+
+void calculate() {
+
+System.out.println("\nEnter the Basic Pay :- ");
+
+basic =input.nextDouble();
+
+da=basic*97/100;
+
+hra=basic*10/100;
+
+pf=basic*12/100;
+
+club=basic*10/100;
+
+grros= basic+da+hra-pf-club;
+
+}
+
+void display1() {
+
+System.out.println("\nThe Tax payed by the Employee :-");
+
+System.out.println("The da is "+da);
+
+System.out.println("The hra is "+hra);
+
+System.out.println("The pf is "+pf);
+
+System.out.println("The club is "+club);
+
+System.out.println("The grros salary is "+grros);
+
+}
+
+}
+
+class Teamlead extends employee{
+
+Scanner input =new Scanner(System.in);
+
+double da,hra,pf,basic,club,grros;
+
+void calculate() {
+
+System.out.println("the Basic Pay ");
+
+basic =input.nextDouble();
+
+da=basic*97/100;
+
+hra=basic*10/100;
+
+pf=basic*12/100;
+
+club=basic*10/100;
+
+grros= basic+da+hra-pf-club;
+
+}
+
+void display1() {
+
+System.out.println("\nThe Tax payed by the Employee :-");
+
+System.out.println("The da is "+da);
+
+System.out.println("The hra is "+hra);
+
+System.out.println("The pf is "+pf);
+
+System.out.println("The club is "+club);
+
+System.out.println("The grros salary is "+grros);
+
+}
+
+}
+
+class AssistantProjectManager extends employee{
+
+Scanner input =new Scanner(System.in);
+
+double da,hra,pf,basic,club,grros;
+
+void calculate() {
+
+System.out.println("the Basic Pay ");
+
+basic =input.nextDouble();
+
+da=basic*97/100;
+
+hra=basic*10/100;
+
+pf=basic*12/100;
+
+club=basic*10/100;
+
+grros= basic+da+hra-pf-club;
+
+}
+
+void display1() {
+
+System.out.println("\nThe Tax payed by the Employee :-");
+
+System.out.println("The da is "+da);
+
+System.out.println("The hra is "+hra);
+
+System.out.println("The pf is "+pf);
+
+System.out.println("The club is "+club);
+
+System.out.println("The grros salary is "+grros);
+
+}
+
+}
