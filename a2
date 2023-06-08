@@ -1,0 +1,163 @@
+package abc;
+
+import java.util.Scanner;
+
+class Weather {
+
+public static void main(String[] args)
+
+{
+
+int n,day;
+
+double high_temp,low_temp,amount_rain,amount_snow;
+
+System.out.println("Enter the Number of days ");
+
+Scanner obj = new Scanner(System.in);
+
+n = obj.nextInt();
+
+Weather_report1[] arr = new Weather_report1[n];
+
+for(int i=0;i<n;i++)
+
+{
+
+System.out.println("Enter Day ");
+
+day = obj.nextInt();
+
+System.out.println("Enter the highest temperature of the day - ");
+
+high_temp = obj.nextDouble();
+
+System.out.println("Enter the lowest temperature of the day - ");
+
+low_temp = obj.nextDouble();
+
+System.out.println("Enter the amount of rainfall for the day - ");
+
+amount_rain = obj.nextDouble();
+
+System.out.println("Enter the amount of snowfall for the day - ");
+
+amount_snow = obj.nextDouble();
+
+arr[i] = new Weather_report1(day,high_temp,low_temp,amount_rain,amount_snow);
+
+}
+
+//Creating object avg and passing the array values.
+
+Weather_report1 avg = new Weather_report1();
+
+avg.average(arr);
+
+}
+
+}
+
+class Weather_report1{
+
+double high,low,rain,snow;
+
+int days;
+
+public Weather_report1() //default constructor
+
+{
+
+high = 0;
+
+days = 0;
+
+low = 0;
+
+rain = 0;
+
+snow = 0;
+
+}
+
+public Weather_report1(int day, double high_temp, double low_temp, double amount_rain,double amount_snow)
+
+{
+
+high = high_temp;
+
+day = days;
+
+low = low_temp;
+
+rain = amount_rain;
+
+snow = amount_snow;
+
+}
+
+public static void average(Weather_report1[] arr)
+
+{
+
+double sum1 = 0, sum2 = 0, sum3 = 0, sum4 = 0;
+
+// highest tempearture
+
+for(int i=0;i<arr.length;i++)
+
+{
+
+sum1 = sum1 + arr[i].high;
+
+}
+
+double total1 = sum1/arr.length;
+
+System.out.println("Average high temperature is - "+total1);
+
+//lowest temperature
+
+for(int i=0;i<arr.length;i++)
+
+{
+
+sum2 = sum2 + arr[i].low;
+
+}
+
+double total2 = sum2/arr.length;
+
+System.out.println("Average low temperature is - "+total2);
+
+//Average rainfall
+
+for(int i=0;i<arr.length;i++)
+
+{
+
+sum3 = sum3 + arr[i].rain;
+
+}
+
+double total3 = sum3/arr.length;
+
+System.out.println("Average amount rain is - "+total3);
+
+//Average snowfall
+
+for(int i=0;i<arr.length;i++)
+
+{
+
+sum4 = sum4 + arr[i].snow;
+
+}
+
+double total4 = sum4/arr.length;
+
+System.out.println("Average amount snow is - "+total4);
+
+}
+
+}
