@@ -1,0 +1,1312 @@
+1.
+/*
+Identify primary keys and foreign keys for following database. Create tables and execute queries for given statements.  
+employee(eid,ename,salary)
+assignment(projectid,eid)
+project(projectid,project_name,manager)
+manager(eid,ename)
+i) Alter table to add address in employee table
+ii) Display employee name and projects on which they are working/ 
+iii)Display projectid, projectname and their managers.
+iv) Create view of employees working on 'Bank Management' project.
+v) Print names of employess whose salary is greater than 40000
+vi) Update salary of each employee with increase of Rs.2000
+*/
+create database testt;
+use testt;
+CREATE TABLE Employee (
+    eid INT PRIMARY KEY,
+    ename VARCHAR(50),
+    salary INT
+);
+CREATE TABLE Manager (
+    eid INT PRIMARY KEY,
+    ename VARCHAR(50)
+);
+
+CREATE TABLE Project (
+    projectid INT PRIMARY KEY,
+    project_name VARCHAR(50),
+    manager INT,
+    FOREIGN KEY (manager) REFERENCES Manager(eid)
+);
+
+CREATE TABLE Assignment (
+    projectid INT,
+    eid INT,
+    PRIMARY KEY (projectid, eid),
+    FOREIGN KEY (projectid) REFERENCES Project(projectid),
+    FOREIGN KEY (eid) REFERENCES Employee(eid)
+);
+-- i) Alter Table to Add Address in Employee Table:
+ALTER TABLE Employee
+ADD address VARCHAR(255);
+
+INSERT INTO Employee (eid, ename, salary, address)
+VALUES
+(1, 'John Doe', 50000, '123 Main Street, Anytown, USA'),
+(2, 'Jane Smith', 45000, '456 Elm Street, Anytown, USA'),
+(3, 'Peter Jones', 40000, '789 Oak Street, Anytown, USA'),
+(4, 'Mary Brown', 35000, '1011 Maple Street, Anytown, USA'),
+(5, 'David Miller', 30000, '1213 Pine Street, Anytown, USA');
+
+INSERT INTO Manager (eid, ename)
+VALUES
+(1, 'John Smith'),
+(2, 'Jane Doe'),
+(3, 'Peter Jones');
+
+INSERT INTO Project (projectid, project_name, manager)
+VALUES
+(1, 'Bank Management', 1),
+(2, 'E-commerce Website', 2),
+(3, 'Mobile Application', 3);
+
+INSERT INTO Assignment (projectid, eid)
+VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 4),
+(2, 5),
+(3, 3);
+
+
+-- ii) Display Employee Name and Projects on Which They Are Working
+SELECT e.ename, p.project_name
+FROM Employee e
+JOIN Assignment a ON e.eid = a.eid
+JOIN Project p ON a.projectid = p.projectid;
+
+-- iii) Display Project ID, Project Name, and Their Managers:
+SELECT p.projectid, p.project_name, m.ename
+FROM Project p
+JOIN Manager m ON p.manager = m.eid;
+
+-- iv) Create View of Employees Working on 'Bank Management' Project:
+CREATE VIEW BankManagementEmployees AS
+SELECT e.ename
+FROM Employee e
+JOIN Assignment a ON e.eid = a.eid
+JOIN Project p ON a.projectid = p.projectid
+WHERE p.project_name = 'Bank Management';
+
+SELECT * FROM BankManagementEmployees;
+
+-- v) Print Names of Employees Whose Salary Is Greater Than 40,000:
+SELECT ename
+FROM Employee
+WHERE salary > 40000;
+
+-- vi) Update Salary of Each Employee with an Increase of Rs.2000:
+UPDATE Employee
+SET salary = salary + 2000 WHERE eid!= -1;
+ 
+SELECT * FROM employee;
+
+2.
+  /*
+Identify primary keys and foreign keys for following database. Create tables and execute queries for given statements.  
+employee(eid,ename,salary)
+assignment(projectid,eid)
+project(projectid,project_name,manager)
+manager(eid,ename)
+i)Modify eid to use auto_increment 
+ii) Display Employees working in both projects 'Bank Management' and 'Content Management'.
+iii) Display average salary of organization.
+iv) Display employees who do not work on 'Bank Management' Project.
+v) Delete employee whose id is 5.
+vi) Display employee having highest salary in oraganization.
+*/
+CREATE DATABASE test2;
+USE test2;
+-- DROP DATABASE test2;
+CREATE TABLE Employee (
+    eid INT PRIMARY KEY AUTO_INCREMENT,
+    ename VARCHAR(50),
+    salary INT,
+    address VARCHAR(255)
+);
+
+CREATE TABLE Manager (
+    eid INT PRIMARY KEY,
+    ename VARCHAR(50)
+);
+
+CREATE TABLE Project (
+    projectid INT PRIMARY KEY,
+    project_name VARCHAR(50),
+    manager INT,
+    FOREIGN KEY (manager) REFERENCES Manager(eid)
+);
+
+CREATE TABLE Assignment (
+    projectid INT,
+    eid INT,
+    PRIMARY KEY (projectid, eid),
+    FOREIGN KEY (projectid) REFERENCES Project(projectid),
+    FOREIGN KEY (eid) REFERENCES Employee(eid)
+);
+INSERT INTO Employee (eid, ename, salary, address)
+VALUES
+(1, 'John Doe', 50000, '123 Main Street, Anytown, USA'),
+(2, 'Jane Smith', 45000, '456 Elm Street, Anytown, USA'),
+(3, 'Peter Jones', 40000, '789 Oak Street, Anytown, USA'),
+(4, 'Mary Brown', 35000, '1011 Maple Street, Anytown, USA'),
+(5, 'David Miller', 30000, '1213 Pine Street, Anytown, USA');
+
+INSERT INTO Manager (eid, ename)
+VALUES
+(1, 'John Smith'),
+(2, 'Jane Doe'),
+(3, 'Peter Jones');
+
+INSERT INTO Project (projectid, project_name, manager)
+VALUES
+(1, 'Bank Management', 1),
+(4, 'Content Management', 1),
+(2, 'E-commerce Website', 2),
+(3, 'Mobile Application', 3);
+
+INSERT INTO Assignment (projectid, eid)
+VALUES
+(1, 1),
+(1, 2),
+(4, 1),
+(1, 3),
+(2, 4),
+(2, 5),
+(3, 3);
+-- i) Display Employees Working in Both Projects 'Bank Management' and 'Content Management':
+SELECT e.ename
+FROM Employee e
+JOIN Assignment a ON e.eid = a.eid
+JOIN Project p ON a.projectid = p.projectid
+WHERE p.project_name IN ('Bank Management', 'Content Management')
+GROUP BY e.ename
+HAVING COUNT(DISTINCT p.projectid) = 2;
+
+-- ii) Display Average Salary of Organization:
+SELECT AVG(salary) AS avg_salary
+FROM Employee;
+
+-- iii) Display Employees Who Do Not Work on 'Bank Management' Project:
+SELECT e.ename
+FROM Employee e
+LEFT JOIN Assignment a ON e.eid = a.eid
+LEFT JOIN Project p ON a.projectid = p.projectid
+WHERE p.project_name != 'Bank Management' ;
+
+-- iv) Delete Employee Whose ID Is 5:
+DELETE FROM Manager WHERE eid = 5;
+DELETE FROM Assignment WHERE eid = 5;
+DELETE FROM Employee WHERE eid = 5;
+
+-- v) Display Employee Having Highest Salary in Organization:
+SELECT e.ename, e.salary
+FROM Employee e
+WHERE e.salary = (SELECT MAX(salary) FROM Employee);
+
+
+3.
+  /*
+Identify primary keys and foreign keys for following database. Create tables and execute queries for given statements.  
+supplier(supplierid,sname,saddress)
+parts(part_id,part_name,color);
+catalog(supplierid,part_id,cost);
+1)Find name of supplier who supply ‘green’ parts.
+2)find name of suppliers who supply both blue and green parts.
+3)Find supplier who supply all parts.
+4)Fid total cost of red parts.
+5) Find supplier who supply green parts with minimum cost.
+6)Update color of part having part_id = 4 and supplier_id = 2.
+*/
+CREATE DATABASE test3;
+USE test3;
+DROP DATABASE test3;
+CREATE TABLE Supplier (
+    supplierid INT PRIMARY KEY,
+    sname VARCHAR(50),
+    saddress VARCHAR(255)
+);
+
+CREATE TABLE Parts (
+    part_id INT PRIMARY KEY,
+    part_name VARCHAR(50),
+    color VARCHAR(20)
+);
+
+CREATE TABLE Catalog (
+    supplierid INT,
+    part_id INT,
+    cost INT,
+    PRIMARY KEY (supplierid, part_id),
+    FOREIGN KEY (supplierid) REFERENCES Supplier(supplierid),
+    FOREIGN KEY (part_id) REFERENCES Parts(part_id)
+);
+
+-- Insert values into Supplier table
+INSERT INTO Supplier (supplierid, sname, saddress)
+VALUES
+  (1, 'Supplier1', 'Address1'),
+  (2, 'Supplier2', 'Address2'),
+  (3, 'Supplier3', 'Address3');
+
+-- Insert values into Parts table
+INSERT INTO Parts (part_id, part_name, color)
+VALUES
+  (1, 'Part1', 'Red'),
+  (2, 'Part2', 'Blue'),
+  (4, 'Part4', 'Green'),
+  (3, 'Part3', 'Green');
+  
+DROP TABLE Catalog;
+-- Insert values into Catalog table
+INSERT INTO Catalog (supplierid, part_id, cost)
+VALUES
+  (1, 1, 50),
+  (1, 2, 30),
+  (1, 3, 40),
+  (1, 4, 40),
+  (2, 2, 25),
+  (2, 3, 35),
+  (2, 4, 35),
+  (3, 1, 45),
+  (3, 3, 50);
+  
+-- 1) Find Name of Supplier Who Supplies 'Green' Parts:
+SELECT s.sname
+FROM Supplier s
+JOIN Catalog c ON s.supplierid = c.supplierid
+JOIN Parts p ON c.part_id = p.part_id
+WHERE p.color = 'green';
+
+-- 2) Find Name of Suppliers Who Supply Both Blue and Green Parts:
+SELECT s.sname
+FROM Supplier s
+JOIN Catalog c ON s.supplierid = c.supplierid
+JOIN Parts p ON c.part_id = p.part_id
+WHERE p.color IN ('blue', 'green')
+GROUP BY s.sname
+HAVING COUNT(DISTINCT p.color) = 2;
+
+-- 3) Find Supplier Who Supplies All Parts:
+SELECT s.sname
+FROM Supplier s
+JOIN Catalog c ON s.supplierid = c.supplierid
+JOIN Parts p ON c.part_id = p.part_id
+WHERE c.part_id IN (1, 2, 3,4)
+GROUP BY s.supplierid, s.sname
+HAVING COUNT(DISTINCT c.part_id) = 4;
+
+
+-- 4) Find Total Cost of Red Parts:
+SELECT SUM(c.cost) AS total_cost_red_parts
+FROM Catalog c
+JOIN Parts p ON c.part_id = p.part_id
+WHERE p.color = 'red';
+
+-- 5) Find Supplier Who Supplies Green Parts with Minimum Cost:
+SELECT s.sname, MIN(c.cost) AS min_cost_green_parts
+FROM Supplier s
+JOIN Catalog c ON s.supplierid = c.supplierid
+JOIN Parts p ON c.part_id = p.part_id
+WHERE p.color = 'green'
+GROUP BY s.sname;
+
+-- 6) Update Color of Part Having part_id = 4 and supplier_id = 2:
+UPDATE Parts
+SET color = 'NewColor'
+WHERE part_id = 4
+  AND EXISTS (
+    SELECT 1
+    FROM Catalog
+    WHERE Catalog.part_id = Parts.part_id
+      AND Catalog.supplierid = 2
+  );
+
+SELECT * FROM Parts;
+
+4.
+  /*
+Identify primary keys and foreign keys for following database. Create tables and execute queries for given statements.   
+emp(eid,ename,street,city);
+works(eid,company_name,salary);
+company(company_name,city);
+manages(eid,manager_id);
+1)Update company of employee name = ‘Prashant’ from ‘Infosys’ to ‘TCS’.
+2) Display names & cities of all employees who work for 'Infosys'
+3) Display names & Street address & of all employees who work in TCS cities  and earn more than 20000.
+4) Find all employees in database who do not work for 'Infosys'.
+5) Find company wise total salary.
+6) Find names of all employees who work for 'ESDS'.
+*/
+CREATE DATABASE test4;
+USE test4;
+CREATE TABLE Employee (
+    eid INT PRIMARY KEY,
+    ename VARCHAR(50),
+    street VARCHAR(255),
+    city VARCHAR(50)
+);
+
+CREATE TABLE Company (
+    company_name VARCHAR(50) PRIMARY KEY,
+    city VARCHAR(50)
+);
+
+CREATE TABLE Works (
+    eid INT,
+    company_name VARCHAR(50),
+    salary INT,
+    PRIMARY KEY (eid, company_name),
+    FOREIGN KEY (eid) REFERENCES Employee(eid),
+    FOREIGN KEY (company_name) REFERENCES Company(company_name)
+);
+
+CREATE
+TABLE Manages (
+    eid INT,
+    manager_id INT,
+    PRIMARY KEY (eid, manager_id),
+    FOREIGN KEY (eid) REFERENCES Employee(eid),
+    FOREIGN KEY (manager_id) REFERENCES Employee(eid)
+);
+
+-- Insert values into Employee table
+INSERT INTO Employee (eid, ename, street, city)
+VALUES
+  (1, 'John Doe', '123 Main St', 'City1'),
+  (2, 'Jane Smith', '456 Oak St', 'City2'),
+  (3, 'Prashant', '789 Elm St', 'City3'),
+  (4, 'Prashantabai', '789 Elm St', 'City4');
+  -- Add more employee records as needed
+
+-- Insert values into Company table
+INSERT INTO Company (company_name, city)
+VALUES
+  ('Infosys', 'CityA'),
+  ('TCS', 'CityB'),
+  ('ESDS', 'CityC');
+  -- Add more company records as needed
+
+-- Insert values into Works table
+INSERT INTO Works (eid, company_name, salary)
+VALUES
+  (1, 'Infosys', 25000),
+  (2, 'TCS', 30000),
+  (3, 'Infosys', 22000),
+  (4,'EDS',50000);
+  -- Add more works records as needed
+
+-- Insert values into Manages table
+INSERT INTO Manages (eid, manager_id)
+VALUES
+  (1, 2);
+  -- Add more manages records as needed
+  
+-- 1) Update Company of Employee Name = 'Prashant' from 'Infosys' to 'TCS':
+
+UPDATE Works
+SET company_name = 'TCS'
+WHERE eid = (SELECT eid FROM Employee WHERE ename = 'Prashant') AND company_name = 'Infosys';
+
+SELECT * FROM Works;
+-- 2) Display Names & Cities of All Employees Who Work for 'Infosys':
+
+SELECT e.ename, e.city
+FROM Employee e
+JOIN Works w ON e.eid = w.eid
+WHERE w.company_name = 'Infosys';
+
+-- 3) Display Names, Street Address & of All Employees Who Work in TCS Cities and Earn More Than 20000:
+
+SELECT e.ename, e.street, c.city
+FROM Employee e
+JOIN Works w ON e.eid = w.eid
+JOIN Company c ON w.company_name = c.company_name
+WHERE c.city IN (SELECT city FROM Company WHERE company_name = 'TCS')
+AND w.salary > 20000;
+
+-- 4) Find All Employees in Database Who Do Not Work for 'Infosys':
+
+SELECT e.ename, e.city
+FROM Employee e
+LEFT JOIN Works w ON e.eid = w.eid
+WHERE w.company_name !='Infosys';
+
+-- 5) Find Company Wise Total Salary:
+
+SELECT company_name, SUM(salary) AS total_salary
+FROM Works
+GROUP BY company_name;
+
+-- 6) Find Names of All Employees Who Work for 'ESDS':
+
+SELECT e.ename
+FROM Employee e
+JOIN Works w ON e.eid = w.eid
+WHERE w.company_name = 'ESDS';
+
+
+5.
+  /*
+Write a PL/SQL Block of code for:
+a)	Borrower(Rollin, Name, DateofIssue, NameofBook, Status)
+b)	Fine(Roll_no, Date, Amt)
+Calculate the fine for a book by accessing the borrower’s    information.
+*/
+Create DATABASE test5;
+USE test5;
+DROP TABLE Borrower;
+DROP TABLE Fine;
+-- Create the Borrower table
+CREATE TABLE Borrower (
+   Rollin INT PRIMARY KEY,
+    Name VARCHAR(50),
+    DateofIssue DATE,
+    NameofBook VARCHAR(50),
+    Status VARCHAR(20)
+);
+
+-- Create the Fine table
+CREATE TABLE Fine (
+    Roll_no INT,
+    Date DATE,
+    Amt INT,
+    -- PRIMARY KEY (Roll_no, Date),
+    CONSTRAINT fk_fine_borrower FOREIGN KEY (Roll_no) REFERENCES Borrower(Rollin)
+);
+
+-- Insert into Borrower table
+INSERT INTO Borrower (Rollin, Name, DateofIssue, NameofBook, Status)
+VALUES (103, 'John Doe', '2023-10-20', 'Book123', 'Overdue');
+
+-- Now you can insert into the Fine table, referencing an existing Roll_no from Borrower
+INSERT INTO Fine (Roll_no, Date, Amt)
+VALUES (103, '2023-11-20', 10);
+
+DELIMITER //
+
+CREATE PROCEDURE CalculateFine()
+BEGIN
+    DECLARE v_rollin VARCHAR(50);
+    DECLARE v_fine_date DATE;
+    DECLARE v_fine_amt INT DEFAULT 0;
+
+    -- Set the borrower's information
+    SET v_rollin = '103'; -- Replace with the actual Rollin value for the borrower
+    SET v_fine_date = CURDATE(); -- Use the current date or replace it with the actual fine calculation date
+
+    -- Calculate fine based on borrower information
+    SELECT SUM(CASE
+                   WHEN Status = 'Overdue' THEN 5 -- Replace with your fine calculation logic
+                   ELSE 0
+               END) INTO v_fine_amt
+    FROM Borrower
+    WHERE Rollin = v_rollin
+      AND DateofIssue < v_fine_date;
+
+    -- Insert the calculated fine into the Fine table
+    INSERT INTO Fine (Roll_no, Date, Amt)
+    VALUES (v_rollin, v_fine_date, v_fine_amt);
+
+    -- Display the calculated fine
+    SELECT CONCAT('Fine calculated for Rollin ', v_rollin, ' is ', v_fine_amt, ' USD') AS Result;
+
+END //
+
+DELIMITER ;
+
+-- Call the stored procedure
+CALL CalculateFine();
+
+6.
+  /*
+Write a PL/SQL block of code using a cursor that will merge the data available in newly created table N_RollCall 
+with the data available in the O_RollCall. 
+If the data in the first table already exists in the second table then that data should be skipped. 
+*/
+Create DATABASE test61;
+USE test61;
+-- Table declaration for O_RollCall
+CREATE TABLE O_RollCall (
+    Rollno INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Attendance INT
+);
+
+-- Table declaration for N_RollCall
+CREATE TABLE N_RollCall (
+    Rollno INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Attendance INT
+);
+
+-- Insert sample data into O_RollCall
+INSERT INTO O_RollCall (Rollno, Name, Attendance) VALUES
+    (1, 'John Doe', 1),
+    (2, 'Jane Doe', 1),
+    (3, 'Alice Smith', 0);
+
+-- Insert sample data into N_RollCall
+INSERT INTO N_RollCall (Rollno, Name, Attendance) VALUES
+    (2, 'Jane Doe', 1),
+    (4, 'Bob Johnson', 1),
+    (5, 'Eve Anderson', 0);
+
+-- MySQL block to merge data from N_RollCall into O_RollCall
+DELIMITER //
+
+CREATE PROCEDURE MergeData()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE n_rollno INT;
+    DECLARE n_name VARCHAR(255);
+    DECLARE n_attendance INT;
+
+    DECLARE cur CURSOR FOR
+        SELECT Rollno, Name, Attendance FROM N_RollCall;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN cur;
+
+    read_loop: LOOP
+        FETCH cur INTO n_rollno, n_name, n_attendance;
+
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Check if the data already exists in O_RollCall
+        IF NOT EXISTS (SELECT 1 FROM O_RollCall WHERE Rollno = n_rollno) THEN
+            -- Insert data into O_RollCall
+            INSERT INTO O_RollCall (Rollno, Name, Attendance) VALUES (n_rollno, n_name, n_attendance);
+        END IF;
+    END LOOP;
+
+    CLOSE cur;
+END //
+
+DELIMITER ;
+
+-- Call the procedure to merge data
+CALL MergeData();
+
+-- View the merged data in O_RollCall
+SELECT * FROM O_RollCall;
+
+/*
+This code includes the creation of tables O_RollCall and N_RollCall, insertion of sample data,
+ and a stored procedure named MergeData that uses a cursor to iterate through the data in N_RollCall, checking if each record
+ already exists in O_RollCall before inserting it. The CALL MergeData(); statement is used to execute the stored procedure.
+ The final SELECT * FROM O_RollCall; statement shows the merged data in the O_RollCall table.
+*/
+
+
+ 7.
+/*
+Write a Stored Procedure namely proc_Grade for the categorization of student.
+ If marks scored by students in examination is <=1500 and marks>=990 then student will be placed in distinction category
+ if marks scored are between 989 and900 category is first class, if marks 899 and 825 category is Higher Second Class
+ Write a PL/SQL block for using procedure created with above requirement. Stud_Marks(Rollno,name, total_marks) Result(Roll,Name, Class)
+
+*/
+Create DATABASE test6;
+USE test6;
+
+-- Create Stud_Marks table
+CREATE TABLE Stud_Marks (
+    Rollno INT PRIMARY KEY,
+    name VARCHAR(255),
+    total_marks INT
+);
+
+-- Create Result table
+CREATE TABLE Result (
+    Roll INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Class VARCHAR(50)
+);
+
+-- Sample data insertion for testing
+INSERT INTO Stud_Marks (Rollno, name, total_marks) VALUES (1, 'John Doe', 1000);
+INSERT INTO Stud_Marks (Rollno, name, total_marks) VALUES (2, 'Jane Doe', 950);
+INSERT INTO Stud_Marks (Rollno, name, total_marks) VALUES (3, 'Alice Smith', 875);
+
+DELIMITER //
+
+CREATE PROCEDURE proc_Grade(IN Rollno INT, IN name VARCHAR(255), IN total_marks INT)
+BEGIN 
+    DECLARE category VARCHAR(50);
+
+    IF total_marks <= 1500 AND total_marks >= 990 THEN
+        SET category = 'Distinction';
+    ELSEIF total_marks >= 900 AND total_marks <= 989 THEN
+        SET category = 'First Class';
+    ELSEIF total_marks >= 825 AND total_marks <= 899 THEN
+        SET category = 'Higher Second Class';
+    ELSE
+        SET category = 'Not categorized';
+    END IF;
+
+    INSERT INTO Result (Roll, Name, Class) VALUES (Rollno, name, category);
+END //
+
+DELIMITER ;
+
+-- Call the stored procedure for each student
+CALL proc_Grade(1, 'John Doe', (SELECT total_marks FROM Stud_Marks WHERE Rollno = 1));
+CALL proc_Grade(2, 'Jane Doe', (SELECT total_marks FROM Stud_Marks WHERE Rollno = 2));
+CALL proc_Grade(3, 'Alice Smith', (SELECT total_marks FROM Stud_Marks WHERE Rollno = 3));
+
+-- View the results
+SELECT * FROM Result;
+
+8.
+  /*
+Write a database trigger on library table. The System should keep track of the records that are being updated or deleted.
+ The old value of updated or deleted records should be added in Library_Audit Table.
+*/
+Create DATABASE test8;
+USE test8;
+
+-- Table declaration for Library
+CREATE TABLE Library (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(255),
+    Author VARCHAR(255),
+    Genre VARCHAR(100),
+    PublishYear INT
+);
+
+-- Table declaration for Library_Audit
+CREATE TABLE Library_Audit (
+    AuditID INT AUTO_INCREMENT PRIMARY KEY,
+    BookID INT,
+    Title VARCHAR(255),
+    Author VARCHAR(255),
+    Genre VARCHAR(100),
+    PublishYear INT,
+    Action VARCHAR(10),
+    Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Sample data insertion into Library
+INSERT INTO Library (BookID, Title, Author, Genre, PublishYear) VALUES
+    (1, 'Book1', 'Author1', 'Fiction', 2000),
+    (2, 'Book2', 'Author2', 'Mystery', 2010),
+    (3, 'Book3', 'Author3', 'Science Fiction', 2022);
+
+-- Trigger for auditing updates and deletes
+DELIMITER //
+
+CREATE TRIGGER Library_Audit_Trigger
+BEFORE UPDATE ON Library
+FOR EACH ROW
+BEGIN
+    -- For UPDATE
+    IF OLD.Title != NEW.Title OR OLD.Author != NEW.Author OR OLD.Genre != NEW.Genre OR OLD.PublishYear != NEW.PublishYear THEN
+        INSERT INTO Library_Audit (BookID, Title, Author, Genre, PublishYear, Action)
+        VALUES (OLD.BookID, OLD.Title, OLD.Author, OLD.Genre, OLD.PublishYear, 'UPDATE');
+    END IF;
+END //
+
+CREATE TRIGGER Library_Audit_Delete_Trigger
+BEFORE DELETE ON Library
+FOR EACH ROW
+BEGIN
+    -- For DELETE
+    INSERT INTO Library_Audit (BookID, Title, Author, Genre, PublishYear, Action)
+    VALUES (OLD.BookID, OLD.Title, OLD.Author, OLD.Genre, OLD.PublishYear, 'DELETE');
+END //
+
+DELIMITER ;
+
+SHOW TRIGGERS;
+
+SELECT * FROM Library;
+
+UPDATE Library SET Author='Vedant' WHERE BookID = 1;
+DELETE FROM Library WHERE BookID = 1;
+
+SELECT * FROM Library_Audit;
+
+
+
+
+
+Mongodb
+
+  Design and Develop MongoDB Queries using Save and Logical Operators.
+Create ‘users’ collection with name,age and status.
+Insert atleast 10 records with different variations.
+Execute following queries.
+i)Display first five records from collection.
+ii)Update status as “rejected” if age is less than 18.
+iii)Delete the record of user whose name is ‘Akshata’
+iv)Delete records having age greater than 50
+v)Display users having age less than 40 and status = ‘paid’.
+
+
+
+1. Create 'users' collection with name, age, and status, and insert at least 10 records:
+
+
+// Create 'users' collection
+db.createCollection("users")
+
+// Insert at least 10 records
+db.users.insertMany([
+    { name: 'John', age: 25, status: 'paid' },
+    { name: 'Alice', age: 30, status: 'rejected' },
+    { name: 'Bob', age: 19, status: 'paid' },
+    { name: 'Charlie', age: 22, status: 'paid' },
+    { name: 'Akshata', age: 16, status: 'pending' },
+    { name: 'David', age: 40, status: 'rejected' },
+    { name: 'Eve', age: 60, status: 'paid' },
+    { name: 'Frank', age: 50, status: 'rejected' },
+    { name: 'Grace', age: 35, status: 'paid' },
+    { name: 'Hank', age: 45, status: 'paid' }
+]);
+
+
+2. Display the first five records from the collection:
+
+
+db.users.find().limit(5)
+
+
+3. Update status as "rejected" if age is less than 18:
+
+
+db.users.updateMany(
+    { age: { $lt: 18 } },
+    { $set: { status: 'rejected' } }
+)
+
+
+4. Delete the record of the user whose name is 'Akshata':
+
+
+db.users.deleteOne({ name: 'Akshata' })
+
+
+5. Delete records having age greater than 50:
+
+
+db.users.deleteMany({ age: { $gt: 50 } })
+
+
+6. Display users having age less than 40 and status = 'paid':
+
+
+db.users.find({ age: { $lt: 40 }, status: 'paid' })
+
+
+These queries should help you perform the specified operations on the 'users' collection in MongoDB. Adjust the data and queries as needed based on your specific requirements.
+
+
+
+
+Design and Develop MongoDB Queries & use aggregation and indexing
+Create ‘zipcode’ collection with city,state & population
+Insert atleast 10 records with different variations.
+Execute following queries.
+i)Display records from collection.
+ii)Display total population statewise.
+iii) Display total population statewise where population > 20000.
+iv)Create index on state.
+v) Display all index for collection.
+
+
+
+1. Create 'zipcode' collection with city, state, and population, and insert at least 10 records:
+
+
+// Create 'zipcode' collection
+db.createCollection("zipcode")
+
+// Insert at least 10 records
+db.zipcode.insertMany([
+    { city: 'New York', state: 'NY', population: 8000000 },
+    { city: 'Los Angeles', state: 'CA', population: 4000000 },
+    { city: 'Chicago', state: 'IL', population: 2700000 },
+    { city: 'Houston', state: 'TX', population: 2300000 },
+    { city: 'Phoenix', state: 'AZ', population: 1600000 },
+    { city: 'Philadelphia', state: 'PA', population: 1500000 },
+    { city: 'San Antonio', state: 'TX', population: 1400000 },
+    { city: 'San Diego', state: 'CA', population: 1300000 },
+    { city: 'Dallas', state: 'TX', population: 1200000 },
+    { city: 'San Jose', state: 'CA', population: 1000000 }
+]);
+
+
+2. Display records from the collection:
+
+
+db.zipcode.find()
+
+
+3. Display total population statewise:
+
+
+db.zipcode.aggregate([
+    {
+        $group: {
+            _id: "$state",
+            totalPopulation: { $sum: "$population" }
+        }
+    }
+])
+
+
+4. Display total population statewise where population > 20000:
+
+
+db.zipcode.aggregate([
+    {
+        $match: {
+            population: { $gt: 20000 }
+        }
+    },
+    {
+        $group: {
+            _id: "$state",
+            totalPopulation: { $sum: "$population" }
+        }
+    }
+])
+
+
+5. Create an index on the 'state' field:
+
+
+db.zipcode.createIndex({ state: 1 })
+
+
+6. Display all indexes for the collection:
+
+
+db.zipcode.getIndexes()
+
+
+These queries should help you perform the specified operations on the 'zipcode' collection in MongoDB. Adjust the data and queries as needed based on your specific requirements.
+
+
+
+
+Write a program to create simple objects and Array Objects using JSON Language.
+Python
+import json
+
+# Create a simple object
+simple_object = {
+  "name": "John Doe",
+  "age": 30,
+  "city": "New York"
+}
+
+# Convert the simple object to JSON string
+simple_object_json = json.dumps(simple_object)
+print("Simple Object JSON:", simple_object_json)
+
+# Create an array object
+array_object = [
+  {
+    "name": "Alice",
+    "age": 25,
+    "city": "London"
+  },
+  {
+    "name": "Bob",
+    "age": 32,
+    "city": "Paris"
+  },
+  {
+    "name": "Charlie",
+    "age": 28,
+    "city": "Berlin"
+  }
+]
+
+# Convert the array object to JSON string
+array_object_json = json.dumps(array_object)
+print("Array Object JSON:", array_object_json)
+
+
+
+This program first creates a simple object with three properties: name, age, and city. It then converts this object to a JSON string using the json.dumps() function.
+Next, the program creates an array object with three elements, each of which is an object with the same properties as the simple object. The array object is then converted to a JSON string using the json.dumps() function.
+The output of the program is as follows:
+Simple Object JSON: {"name": "John Doe", "age": 30, "city": "New York"}
+Array Object JSON: [{"name": "Alice", "age": 25, "city": "London"}, {"name": "Bob", "age": 32, "city": "Paris"}, {"name": "Charlie", "age": 28, "city": "Berlin"}]
+Write a program to Encode and Decode JSON Object using PHP.
+PHP
+<?php
+
+// Encode a PHP object to JSON
+$phpObject = [
+  "name" => "John Doe",
+  "age" => 30,
+  "city" => "New York"
+];
+
+$jsonObject = json_encode($phpObject);
+echo "Encoded JSON Object: " . $jsonObject . "\n\n";
+
+// Decode a JSON string to a PHP object
+$jsonObjectString = '{"name": "Alice", "age": 25, "city": "London"}';
+$phpObjectDecoded = json_decode($jsonObjectString, true);
+
+echo "Decoded PHP Object:\n";
+print_r($phpObjectDecoded);
+
+
+
+This program first encodes a PHP object to a JSON string using the json_encode() function. The encoded JSON string is then printed to the console.
+Next, the program decodes a JSON string to a PHP object using the json_decode() function. The decoded PHP object is then printed to the console.
+Design and Develop MongoDB Queries.
+Create ‘student’ collection with name,class,age,grade. 
+Insert atleast 10 records with different variations.
+Execute following queries.
+i)Display records from collection.
+ii)Display students from S.E. class only.
+iii) Display S.E.Student having distinction using $and.
+iv) Display Students having distinction from S.E. or T.E. or B.E. using $and ,  $or
+v) Display students having age atleast 30 and more.
+Certainly! Below are MongoDB queries based on the given scenarios for a 'student' collection:
+
+1. Create 'student' collection with name, class, age, and grade, and insert at least 10 records:
+
+
+// Create 'student' collection
+db.createCollection("student")
+
+// Insert at least 10 records
+db.student.insertMany([
+    { name: 'John', class: 'S.E.', age: 22, grade: 'Distinction' },
+    { name: 'Alice', class: 'T.E.', age: 25, grade: 'First Class' },
+    { name: 'Bob', class: 'S.E.', age: 21, grade: 'Distinction' },
+    { name: 'Charlie', class: 'B.E.', age: 30, grade: 'Second Class' },
+    { name: 'David', class: 'S.E.', age: 28, grade: 'Distinction' },
+    { name: 'Eve', class: 'T.E.', age: 22, grade: 'Higher Second Class' },
+    { name: 'Frank', class: 'B.E.', age: 35, grade: 'Distinction' },
+    { name: 'Grace', class: 'S.E.', age: 32, grade: 'First Class' },
+    { name: 'Hank', class: 'T.E.', age: 29, grade: 'Distinction' },
+    { name: 'Ivy', class: 'B.E.', age: 31, grade: 'First Class' }
+]);
+
+
+2. Display records from the collection:
+
+
+db.student.find()
+
+
+3. Display students from S.E. class only:
+
+
+db.student.find({ class: 'S.E.' })
+
+
+4. Display S.E. students having distinction using `$and`:
+
+
+db.student.find({
+    $and: [
+        { class: 'S.E.' },
+        { grade: 'Distinction' }
+    ]
+})
+
+
+5. Display students having distinction from S.E. or T.E. or B.E. using `$and`, `$or`:
+
+
+db.student.find({
+    $and: [
+        { grade: 'Distinction' },
+        {
+            $or: [
+                { class: 'S.E.' },
+                { class: 'T.E.' },
+                { class: 'B.E.' }
+            ]
+        }
+    ]
+})
+
+
+6. Display students having age at least 30 and more:
+
+
+db.student.find({ age: { $gte: 30 } })
+
+
+These queries should help you perform the specified operations on the 'student' collection in MongoDB. Adjust the data and queries as needed based on your specific requirements.
+
+
+Design and Develop MongoDB Queries & use aggregation and indexing
+Create ‘zipcode’ collection with city,state & population
+Insert atleast 10 records with different variations.
+Execute following queries.
+i)Display records from collection.
+ii)Display total population statewise.
+iii) Display total population statewise where population > 20000.
+iv)Display average populations for cities in each state.
+v) Display smallest and largest cities by population for each state.
+
+
+
+1. Create 'zipcode' collection with city, state, and population, and insert at least 10 records:
+
+
+// Create 'zipcode' collection
+db.createCollection("zipcode")
+
+// Insert at least 10 records
+db.zipcode.insertMany([
+    { city: 'New York', state: 'NY', population: 8000000 },
+    { city: 'Los Angeles', state: 'CA', population: 4000000 },
+    { city: 'Chicago', state: 'IL', population: 2700000 },
+    { city: 'Houston', state: 'TX', population: 2300000 },
+    { city: 'Phoenix', state: 'AZ', population: 1600000 },
+    { city: 'Philadelphia', state: 'PA', population: 1500000 },
+    { city: 'San Antonio', state: 'TX', population: 1400000 },
+    { city: 'San Diego', state: 'CA', population: 1300000 },
+    { city: 'Dallas', state: 'TX', population: 1200000 },
+    { city: 'San Jose', state: 'CA', population: 1000000 }
+]);
+
+
+2. Display records from the collection:
+
+
+db.zipcode.find()
+
+
+3. Display total population statewise:
+
+
+db.zipcode.aggregate([
+    {
+        $group: {
+            _id: "$state",
+            totalPopulation: { $sum: "$population" }
+        }
+    }
+])
+
+
+4. Display total population statewise where population > 20000:
+
+
+db.zipcode.aggregate([
+    {
+        $match: {
+            population: { $gt: 20000 }
+        }
+    },
+    {
+        $group: {
+            _id: "$state",
+            totalPopulation: { $sum: "$population" }
+        }
+    }
+])
+
+
+5. Display average populations for cities in each state:
+
+
+db.zipcode.aggregate([
+    {
+        $group: {
+            _id: "$state",
+            averagePopulation: { $avg: "$population" }
+        }
+    }
+])
+
+
+6. Display smallest and largest cities by population for each state:
+
+
+db.zipcode.aggregate([
+    {
+        $group: {
+            _id: "$state",
+            smallestCity: { $min: "$city" },
+            largestCity: { $max: "$city" }
+        }
+    }
+])
+
+
+These queries should help you perform the specified operations on the 'zipcode' collection in MongoDB. Adjust the data and queries as needed based on your specific requirements.
+
+	Create Customer(Cid, CustName, City), Product(Pid, ProductName, Qty)  and Order(Oid, Cid, Pid, Qty) tables.
+5)	Insert data into tables.
+6)	Write a trigger to update count of product in Product table when customer successfully paced order for particular product.
+Hint: Order will be placed when its entry will be inserted into order table.
+
+
+Create DATABASE test9;
+USE test9;
+
+-- Create Customer table
+CREATE TABLE Customer (
+    Cid INT PRIMARY KEY,
+    CustName VARCHAR(255),
+    City VARCHAR(255)
+);
+
+-- Create Product table
+CREATE TABLE Product (
+    Pid INT PRIMARY KEY,
+    ProductName VARCHAR(255),
+    Qty INT
+);
+
+-- Create Order table
+CREATE TABLE Order1 (
+    Oid INT PRIMARY KEY,
+    Cid INT,
+    Pid INT,
+    Qty INT,
+    FOREIGN KEY (Cid) REFERENCES Customer(Cid),
+    FOREIGN KEY (Pid) REFERENCES Product(Pid)
+);
+
+DELIMITER //
+
+CREATE TRIGGER UpdateProductQty
+AFTER INSERT ON Order1
+FOR EACH ROW
+BEGIN
+    DECLARE productQuantity INT;
+    SELECT Qty INTO productQuantity FROM Product WHERE Pid = NEW.Pid;
+    
+    IF productQuantity IS NOT NULL THEN
+        UPDATE Product SET Qty = productQuantity - NEW.Qty WHERE Pid = NEW.Pid;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- Insert data into Customer table
+INSERT INTO Customer (Cid, CustName, City) VALUES
+    (1, 'John Doe', 'New York'),
+    (2, 'Alice Smith', 'Los Angeles'),
+    (3, 'Bob Johnson', 'Chicago');
+
+-- Insert data into Product table
+INSERT INTO Product (Pid, ProductName, Qty) VALUES
+    (101, 'Laptop', 50),
+    (102, 'Phone', 100),
+    (103, 'Tablet', 75);
+    
+SELECT * FROM Product;
+
+-- Insert data into Order table
+INSERT INTO Order1 (Oid, Cid, Pid, Qty) VALUES
+    (1, 1, 101, 2),
+    (2, 2, 102, 3),
+    (3, 3, 103, 1);
+
+SELECT * FROM Product;
+
+	Design Mongo DB Schema for Restaurant having RestaurantId, Name, Cuisine, Score, Address 
+ix)	Write a MongoDB query to display all the documents in the collection restaurants.
+x)	Write a MongoDB query to display all the documents in the collection restaurants  with fields Name, Cuisine, Score and exclude Id and Address
+xi)	Write a MongoDB query to find the restaurants who achieved a score more than 80.
+xii)	Write a MongoDB query to find the restaurant having highest score. 
+xiii)	Write a MongoDB query to find the count of restaurants for each cuisine.
+
+
+
+1. Create a schema for the restaurant collection:
+
+
+// Create 'restaurants' collection with schema
+db.createCollection("restaurants", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["RestaurantId", "Name", "Cuisine", "Score", "Address"],
+            properties: {
+                RestaurantId: {
+                    bsonType: "int",
+                    description: "must be an integer and is required"
+                },
+                Name: {
+                    bsonType: "string",
+                    description: "must be a string and is required"
+                },
+                Cuisine: {
+                    bsonType: "string",
+                    description: "must be a string and is required"
+                },
+                Score: {
+                    bsonType: "int",
+                    description: "must be an integer and is required"
+                },
+                Address: {
+                    bsonType: "string",
+                    description: "must be a string and is required"
+                }
+            }
+        }
+    }
+});
+
+
+2. Insert data into the `restaurants` collection:
+
+
+// Insert data into 'restaurants' collection
+db.restaurants.insertMany([
+    { RestaurantId: 1, Name: 'ABC Restaurant', Cuisine: 'Italian', Score: 85, Address: '123 Main St' },
+    { RestaurantId: 2, Name: 'XYZ Bistro', Cuisine: 'French', Score: 92, Address: '456 Oak St' },
+    { RestaurantId: 3, Name: 'PQR Grill', Cuisine: 'Steakhouse', Score: 78, Address: '789 Maple St' },
+    // Add more restaurant records as needed
+]);
+
+
+3. MongoDB queries for the specified scenarios:
+
+
+// i) Display all documents in the 'restaurants' collection
+db.restaurants.find();
+
+// ii) Display all documents with fields Name, Cuisine, Score, and exclude Id and Address
+db.restaurants.find({}, { _id: 0, Name: 1, Cuisine: 1, Score: 1 });
+
+// iii) Find restaurants with a score more than 80
+db.restaurants.find({ Score: { $gt: 80 } });
+
+// iv) Find the restaurant with the highest score
+db.restaurants.find().sort({ Score: -1 }).limit(1);
+
+// v) Find the count of restaurants for each cuisine
+db.restaurants.aggregate([
+    {
+        $group: {
+            _id: "$Cuisine",
+            count: { $sum: 1 }
+        }
+    }
+]);
+
+
+
+
+
+
+
+
+
+
+
