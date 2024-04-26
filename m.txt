@@ -1,0 +1,409 @@
+Asssignn 1
+import numpy as np
+import pandas as pd
+
+df=pd.read_csv("/content/test - test.csv")
+
+df.describe()
+df_cleaned=df.fillna(method='ffill')
+df_cleaned=df.dropna()
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+plt.figure(figsize=(8,6))
+sns.scatterplot(data=df,x='Age',y='Pclass')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('scatter plot')
+plt.show()
+
+plt.figure(figsize=(8,6))
+plt.plot(df['Age'],df['Fare'])
+plt.xlabel('time')
+plt.ylabel('values')
+plt.title('line chart')
+plt.show()
+
+plt.figure(figsize=(8,6))
+plt.hist(df['Sex'],bins=20,edgecolor='black')
+plt.xlabel('values')
+plt.ylabel('Frequency')
+plt.title('Histogram')
+plt.show()
+
+plt.figure(figsize=(8,6))
+sns.boxplot(data=df,y='Age')
+plt.ylabel('Age')
+plt.title('Boxplot')
+plt.show()
+
+
+from sklearn.preprocessing import LabelEncoder
+
+# Load the Titanic dataset
+titanic_data = pd.read_csv("/content/test - test.csv")
+
+# Drop rows with missing values in 'sex' and 'embarked' columns
+titanic_data_cleaned = titanic_data.dropna(subset=['Sex', 'Embarked'])
+
+# Initialize LabelEncoder
+label_encoder = LabelEncoder()
+
+# Perform label encoding for 'sex' column
+titanic_data_cleaned['sex_encoded'] = label_encoder.fit_transform(titanic_data_cleaned['Sex'])
+
+# Perform label encoding for 'embarked' column
+titanic_data_cleaned['embarked_encoded'] = label_encoder.fit_transform(titanic_data_cleaned['Embarked'])
+
+# Display the encoded dataset
+print(titanic_data_cleaned[['Sex', 'sex_encoded', 'Embarked', 'embarked_encoded']].head())
+
+
+
+# Drop rows with missing values in 'sex' and 'embarked' columns
+titanic_data_cleaned = titanic_data.dropna(subset=['Sex', 'Embarked'])
+
+# Perform one-hot encoding for 'sex' and 'embarked' columns
+titanic_data_encoded = pd.get_dummies(titanic_data_cleaned, columns=['Sex', 'Embarked'])
+
+# Display the encoded dataset
+print(titanic_data_encoded.head())
+
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
+
+
+# Drop rows with missing values in numerical columns
+titanic_data_cleaned = titanic_data.dropna(subset=['Age', 'Fare'])
+
+# Select the numerical columns you want to scale
+numerical_columns = ['Age', 'Fare']
+
+# Initialize the StandardScaler
+scaler = StandardScaler()
+
+# Fit and transform the selected numerical columns using the scaler
+titanic_data_cleaned[numerical_columns] = scaler.fit_transform(titanic_data_cleaned[numerical_columns])
+
+# Display the scaled dataset
+print(titanic_data_cleaned.head())
+
+
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+
+# Drop rows with missing values in numerical columns
+titanic_data_cleaned = titanic_data.dropna(subset=['Age', 'Fare'])
+
+# Select the numerical columns you want to scale
+numerical_columns = ['Age', 'Fare']
+
+# Initialize the MinMaxScaler
+scaler = MinMaxScaler()
+
+# Fit and transform the selected numerical columns using the scaler
+titanic_data_cleaned[numerical_columns] = scaler.fit_transform(titanic_data_cleaned[numerical_columns])
+
+# Display the scaled dataset
+print(titanic_data_cleaned.head())
+
+assign 2
+
+# Import libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from pandas.core.common import random_state
+from sklearn.linear_model import LinearRegression
+df=pd.read_csv("/content/test - test.csv")
+df.info()
+print(df.head())
+df.describe()
+df=df.drop(columns=['Name','Sex','Ticket','Cabin','Embarked'])
+sel_columns=['Fare']
+X=df.iloc[:,:-1]
+y=df.iloc[:,-1]
+from sklearn.model_selection import train_test_split 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=40) 
+from sklearn.linear_model import LinearRegression 
+model = LinearRegression() 
+model=model.fit(X_train, y_train) 
+model.score(X_test, y_test) 
+y_pred_train = model.predict(X_train) 
+y_pred_test = model.predict(X_test) 
+y_pred_train 
+y_pred_test 
+
+import matplotlib.pyplot as plt 
+plt.figure(figsize = (10,4))
+plt.subplot(121) 
+plt.scatter(y_train, y_pred_train) 
+plt.plot(y_train, y_train, 'r:') 
+plt.xlabel('Ground Truth') 
+plt.ylabel('Prediction') 
+plt.title('Trianing Data') 
+plt.grid() 
+plt.subplot(122) 
+plt.scatter(y_test, y_pred_test) 
+plt.plot(y_test, y_test, 'r:') 
+plt.xlabel('Ground Truth') 
+plt.ylabel('Prediction') 
+plt.title('Test Data') 
+plt.grid() 
+
+model.coef_ 
+
+model.intercept_ 
+
+p=y_test-y_pred_test 
+p
+
+assign 3
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load Titanic dataset
+titanic_data = pd.read_csv('/content/test - test.csv')
+print(titanic_data)
+titanic_data=titanic_data.dropna()
+
+
+# Preprocess the data (handle missing values, convert categorical variables to numerical, etc.)
+# For simplicity, let's assume preprocessing has already been done
+
+# Select features and target variable
+X = titanic_data[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare']]
+
+# Convert categorical variables to numerical using one-hot encoding
+X = pd.get_dummies(X)
+
+# Use 'Pclass' column as the target variable
+y = titanic_data['Pclass']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the decision tree classifier
+model = DecisionTreeClassifier(random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Create confusion matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(conf_matrix)
+
+# Visualize the confusion matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", cbar=False,
+            xticklabels=['1st Class', '2nd Class', '3rd Class'],
+            yticklabels=['1st Class', '2nd Class', '3rd Class'])
+plt.xlabel('Predicted Class')
+plt.ylabel('True Class')
+plt.title('Confusion Matrix')
+plt.show()
+
+# Visualize the decision tree
+plt.figure(figsize=(15,10))
+plot_tree(model, feature_names=X.columns, class_names=['1st Class', '2nd Class', '3rd Class'], filled=True)
+plt.show()
+
+assign 4
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load Titanic dataset
+titanic_data = pd.read_csv('/content/test - test.csv')
+
+# Preprocess the data (handle missing values, convert categorical variables to numerical, etc.)
+# For simplicity, let's assume preprocessing has already been done
+
+# Drop rows with missing values
+titanic_data = titanic_data.dropna()
+
+# Select features and target variable
+X = titanic_data[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare']]
+
+# Convert categorical variables to numerical using one-hot encoding
+X = pd.get_dummies(X)
+
+# Use 'Survived' column as the target variable
+y = titanic_data['Pclass']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the Naive Bayes classifier
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Create confusion matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(conf_matrix)
+
+# Visualize the confusion matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", cbar=False,
+            xticklabels=['Not Survived', 'Survived'],
+            yticklabels=['Not Survived', 'Survived'])
+plt.xlabel('Predicted Class')
+plt.ylabel('True Class')
+plt.title('Confusion Matrix')
+plt.show()
+
+assign 5
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.callbacks import EarlyStopping
+
+# Load Titanic dataset
+titanic_data = pd.read_csv('/content/test - test.csv')
+
+# Preprocess the data (handle missing values, convert categorical variables to numerical, etc.)
+titanic_data = titanic_data.dropna()
+X = titanic_data[['Pclass', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare']]
+X = pd.get_dummies(X)
+y = titanic_data['Pclass']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Standardize the features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Build the ANN model
+model = Sequential()
+model.add(Dense(128, activation='relu', input_dim=X_train_scaled.shape[1]))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+# Compile the model
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Define EarlyStopping callback to stop training if the validation loss doesn't improve for a specified number of epochs
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
+
+# Train the model
+history = model.fit(X_train_scaled, y_train, epochs=50, batch_size=32, verbose=1, validation_split=0.2, callbacks=[early_stopping])
+
+# Evaluate the model
+y_pred_proba = model.predict(X_test_scaled)
+y_pred = np.round(y_pred_proba).flatten()
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
+
+# Plot training and validation loss
+import matplotlib.pyplot as plt
+
+plt.plot(history.history['loss'], label='Training Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.show()
+
+# Plot training and validation accuracy
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.title('Training and Validation Accuracy')
+plt.legend()
+plt.show()
+
+assign 6
+# Import necessary libraries
+import pandas as pd
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load Titanic dataset
+titanic_data = pd.read_csv('/content/test - test.csv')
+
+# Preprocess the data (handle missing values, convert categorical variables to numerical, etc.)
+# For simplicity, let's assume preprocessing has already been done
+# Drop rows with missing values
+titanic_data = titanic_data.dropna()
+
+# Select features
+X = titanic_data[['Age',  'Fare']]
+
+# Convert categorical variables to numerical using one-hot encoding
+X = pd.get_dummies(X)
+
+# Standardize the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Use the elbow method to find the optimal number of clusters
+inertia = []
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, init='k-means++', random_state=42)
+    kmeans.fit(X_scaled)
+    inertia.append(kmeans.inertia_)
+
+# Plot the elbow method
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, 11), inertia, marker='o', linestyle='--')
+plt.xlabel('Number of clusters')
+plt.ylabel('Inertia')
+plt.title('Elbow Method')
+plt.xticks(range(1, 11))
+plt.grid(True)
+plt.show()
+
+# Based on the elbow method, choose the optimal number of clusters
+# Let's assume the optimal number of clusters is 3
+k = 3
+
+# Perform K-means clustering with the optimal number of clusters
+kmeans = KMeans(n_clusters=k, init='k-means++', random_state=42)
+kmeans.fit(X_scaled)
+
+# Add cluster labels to the dataset
+titanic_data['Cluster'] = kmeans.labels_
+
+# Visualize K-means clustering results
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Age', y='Fare', hue='Cluster', data=titanic_data, palette='viridis', legend='full')
+plt.title('K-means Clustering Results')
+plt.xlabel('Age')
+plt.ylabel('Fare')
+plt.show()
